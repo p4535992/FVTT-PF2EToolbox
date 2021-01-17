@@ -3,7 +3,7 @@
     "title": "Loot app dnd5e",
     "description": "Loot app dnd5e",
     "version": "1.5.9",
-    "author": "",
+    "author": "XXX",
     "type": "module",
     "includes": [
       "./assets/**",
@@ -30,8 +30,6 @@
         "location": ""
       }
     ],
-    "languages": [
-    ],
     "systems": ["dnd5e"],
     "scripts": [
     ],
@@ -41,9 +39,7 @@
     "styles": [
         "css/loot-app/LootAppDnd5e.css"
     ],
-    "packs": [
-    ],
-    "url": "https://github.com/p4535992/FVTT-PF2EToolbox",
+    "url": "https://github.com/p4535992/FVTT-PF2EToolbox/tree/master",
     "manifest": "https://github.com/p4535992/FVTT-PF2EToolbox/raw/master/src/module.json",
     "download": "https://github.com/p4535992/FVTT-PF2EToolbox/raw/master/loot-app-dnd5e.zip",
     "minimumCoreVersion": "0.7.6",
