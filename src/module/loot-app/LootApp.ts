@@ -13,8 +13,8 @@
  * limitations under the License.
  */
 
-import { MODULE_NAME } from '../Constants';
-import Settings from '../settings-app/Settings';
+import { MODULE_NAME } from '../settings';
+// import Settings from '../settings-app/Settings';
 import { GetItemFromCollection, GetMagicItemTables, GetTreasureTables } from './LootAppUtil';
 import { CREATE_KEY_NONE, CREATE_MODES, CreateMode, IGradeStats, ITEM_GRADES, ITEM_MATERIALS, ITEM_RUNES } from './LootAppData';
 
@@ -93,7 +93,7 @@ export default function extendLootSheet() {
             const editableSheetPath = `modules/${MODULE_NAME}/templates/loot-app/LootApp.html`;
             const nonEditableSheetPath = 'systems/pf2e/templates/actors/loot-sheet-no-edit.html';
 
-            const isEditable = this.actor.getFlag('pf2e', 'editLoot.value');
+            const isEditable = this.actor.sheet.isEditable;
 
             if (isEditable && game.user.isGM) {
                 return editableSheetPath;
@@ -171,8 +171,8 @@ export default function extendLootSheet() {
 
                 renderData['treasureTables'] = await GetTreasureTables();
                 // Quick Mystification breaks when these are enabled, investigate.
-                // renderData['magicItemTables'] = await GetMagicItemTables('Permanent Items');
-                // renderData['consumablesTables'] = await GetMagicItemTables('Consumables Items');
+                renderData['magicItemTables'] = await GetMagicItemTables('Permanent Items');
+                renderData['consumablesTables'] = await GetMagicItemTables('Consumables Items');
 
                 renderData['flags'] = this.actor.data.flags;
 
@@ -430,10 +430,11 @@ export default function extendLootSheet() {
 
             const newItem = await this.actor.createOwnedItem(newItemData);
 
-            if (event.altKey && Settings.get(Settings.FEATURES.QUICK_MYSTIFY)) {
+            //if (event.altKey && Settings.get(Settings.FEATURES.QUICK_MYSTIFY)) {
                 await window['ForienIdentification'].mystify(`Actor.${this.actor.id}.OwnedItem.${newItem['_id']}`, { replace: true });
-                // this.render();
-            }
+
+                setTimeout(() => this.render, 250);
+            //}
         }
 
         activateListeners(html: JQuery) {
@@ -474,6 +475,10 @@ export default function extendLootSheet() {
                 let results = filtered.map((i) => i.data);
 
                 results = results.map((i) => {
+                    if (!i.data.value?.value) {
+                        return i;
+                    }
+
                     const roll = new Roll('1d4').roll();
                     i.data.value.value = roll.total * i.data.value.value;
                     return i;
@@ -482,12 +487,55 @@ export default function extendLootSheet() {
                 const existingItems = actor.items.map((i) => i.id) as string[];
                 await actor.createEmbeddedEntity('OwnedItem', results);
 
-                if (Settings.get(Settings.FEATURES.QUICK_MYSTIFY) && event.altKey) {
+                //if (Settings.get(Settings.FEATURES.QUICK_MYSTIFY) && event.altKey) {
                     const newItems = actor.items.filter((i: Item) => !existingItems.includes(i.id)) as Item[];
                     for (const item of newItems) {
                         window['ForienIdentification'].mystify(`Actor.${actor.id}.OwnedItem.${item.id}`, { replace: true });
                     }
+                //}
+            });
+            html.find('button.roll-magic-item').on('click', async (event) => {
+                event.preventDefault();
+
+                const button = $(event.currentTarget) as JQuery<HTMLButtonElement>;
+                const tableId = button.data('entity-id') as string;
+                const drawCount = Number(button.data('count'));
+
+                const table = (await GetItemFromCollection('pf2e.rollable-tables', tableId)) as RollTable;
+
+                let rolls = await table.drawMany(drawCount);
+                const promises = rolls.results.map((r) => {
+                    if (!r.hasOwnProperty('collection')) {
+                        return Promise.resolve(null);
+                    }
+                    return GetItemFromCollection(r.collection, r.resultId);
+                });
+
+                let entities: (Entity | null)[] = await Promise.all(promises);
+
+                let filtered = entities.filter((i) => i !== null && i !== undefined) as Entity[];
+
+                if (filtered.length !== drawCount) {
+                    ui.notifications.warn(
+                        'PF2EToolbox drew a custom weapon, custom armor, or typed potion, but these are not supported. One or more rolls has been skipped.',
+                    );
                 }
+
+                let results = filtered.map((i) => i.data);
+
+                const existingItems = actor.items.map((i) => i.id) as string[];
+                await actor.createEmbeddedEntity('OwnedItem', results);
+
+                await new Promise((resolve) => setTimeout(resolve, 1000));
+
+                //if (Settings.get(Settings.FEATURES.QUICK_MYSTIFY) && event.altKey) {
+                    const newItems = actor.items.filter((i: Item) => !existingItems.includes(i.id)) as Item[];
+                    for (const item of newItems) {
+                        await window['ForienIdentification'].mystify(`Actor.${actor.id}.OwnedItem.${item.id}`, { replace: true });
+                    }
+
+                    setTimeout(() => this.render, 250);
+                //}
             });
 
             html.find('button.clear-inventory').on('click', async (event) => {
@@ -498,7 +546,7 @@ export default function extendLootSheet() {
         }
 
         async _onDrop(event: DragEvent) {
-            if (Settings.get(Settings.FEATURES.QUICK_MYSTIFY)) {
+            //if (Settings.get(Settings.FEATURES.QUICK_MYSTIFY)) {
                 const existing = this.actor.items.map((i: Item) => i.id) as string[];
                 await super._onDrop(event);
 
@@ -509,9 +557,9 @@ export default function extendLootSheet() {
                     }
                     setTimeout(() => this.render(true), 1);
                 }
-            } else {
-                return super._onDrop(event);
-            }
+            //} else {
+            //    return super._onDrop(event);
+            //}
         }
     };
 }

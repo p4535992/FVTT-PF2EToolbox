@@ -13,7 +13,8 @@ A selection of enhancements and tools made to help run PF2E games in Foundry VTT
 
 All features can be enabled or disabled on a feature-by-feature basis in the settings.
 
-
+### Thanks To
+Sir Blackmane#5955 - for creating the original group save macro the one in Toolbox is based on
 
 ### Small Features
 - Hold control or shift to quickly increase/decrease item quantities by configurable amounts
@@ -23,16 +24,22 @@ All features can be enabled or disabled on a feature-by-feature basis in the set
 - Flatten NPC feature to using the variant rules from the GMG for *Proficiency without Level*
 
 ### Macro Helpers
-A growing collection of macro helpers.
+A growing collection of macro helpers. Examples of their use are included in a compendium.
 
 `game.PF2EToolbox.rollSecretSkill(skill_id)` can roll an always-secret skill check for the selected token, or if none is selected for the user's configured character. If no skill id is passed in it will show a prompt to determine the skill. You can use `game.PF2EToolbox.rollSecretSkill('give me the ids!')` to get a list of skill ids for the selected token.
 
 `game.PF2EToolbox.distributeXp(amount)` can distribute an amount of XP to selected tokens. If no amount is provided, shows a prompt for the amount.
 
+`game.PF2EToolbox.distributeHeroPoints(amount)` can distribute 1+ hero points to selected tokens. If no amount is provided, shows a prompt for the amount.
+
+`game.PF2EToolbox.groupSave()` will roll a saving throw for all selected tokens and optionally display the success level and if you entered the damage, display buttons next to each result for full/half/double damage.
+
 ### NPC Scaler
 Right clicking an NPC in the sidebar shows a new "Scale to Level" option. You can quickly scale any NPC to any level, up or down.
 
 It's pretty darn accurate, as PF2E has pretty tight math - however, you should validate the NPC yourself. Sometimes creatures deviate from the guidelines presented in the GMG, in these cases it attempts to make a best-guess while keeping the spirit of the monster intact. For example, a creature that is below the specified HP guidelines will still be below the specified HP guidelines at the new level by the same percentage amount.
+
+The only time it begins to "break down" is if you scale a creature multiple times, say from level 1 to 3, then from 3 to 5, and so on.
 
 It does the following
 - Armor Class, Saving Throws, Hit Points
@@ -53,11 +60,11 @@ Right clicking will roll 2x the value, even for the d20 rolls. If you have a tok
 Found in the journals tab. 
 
 ### Token Setup
-If you name all your token images in the below manner, it can smartly map token names for a specified folder automatically.
+If you name all your token images in the below manner, it can smartly map token names for a specified folder automatically. Supported file formats are jpg, jpeg, png, gif, webp and svg - the token setup tool will detect any of these formats, but you must use the same format for all your tokens of a specific creature because of limitations with Foundry.
 
 Token names should be as follows, and will be checked for in a configurable path of your choice.
 
-> `Creature_Name_No_Spaces_##.png`
+> `Creature_Name_No_Spaces_##`
 
 Creatures that are NOT set to "Link Actor Data" (meaning they are NOT unique) will use the correct wildcard syntax. Otherwise, they MUST end with `01`.
 
@@ -76,12 +83,12 @@ For the example "Ghost, Commoner" the name mapper will try
 2. `Ghost_01.png`
 
 ### Loot Generator
-This is a work in progress, but right now it can quickly roll treasure items including updating their values correctly. Works with the quick mystification feature if you want the items to need appraisal (hold alt as usual). It's a separate loot sheet, as noted in the preview image (click on Settings in the header and use the `pf2e-toolbox.LootApp` sheet).
+This is a work in progress, but right now it can quickly roll treasure items (including updating their values correctly), roll consumables, and roll magic items. Works with the quick mystification feature if you want the items to need appraisal (hold alt as usual). It's a separate loot sheet, as noted in the preview image (click on Settings in the header and use the `pf2e-toolbox.LootApp` sheet).
 
 ![image](https://github.com/Djphoenix719/FVTT-PF2EToolbox/blob/master/.github/treasure-generator-v1.png?raw=true)
 
 ### Features to Come
-- Loot Roller w/ automation support for Forien's Unidentified Items
+- Spell Scroll creator
 
 ## License
 

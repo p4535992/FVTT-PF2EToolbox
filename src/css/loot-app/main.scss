@@ -42,3 +42,11 @@ div.pf2e-toolbox.loot-app {
         overflow-y: auto;
     }
 }
+
+// ADDED
+
+.clearfix {
+    content: '';
+    clear: both;
+    display: table;
+}
