@@ -4,6 +4,7 @@ export const preloadTemplates = async function () {
 	// const MODULE_NAME = 'itemcollection';
 	const templatePaths = [
 		// Add paths to "module/XXX/templates"
+		`/modules/${MODULE_NAME}/templates/loot-app/system/loot-sheet-no-edit.html`,
 		`/modules/${MODULE_NAME}/templates/loot-app/create/CreateArmor.html`,
 		`/modules/${MODULE_NAME}/templates/loot-app/create/CreateShared.html`,
 		`/modules/${MODULE_NAME}/templates/loot-app/create/CreateTab.html`,

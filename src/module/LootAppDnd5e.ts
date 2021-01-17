@@ -68,7 +68,7 @@ function enableQuickMystify() {
         }
     };
 
-    const characterSheet = CONFIG.Actor.sheetClasses['character']['pf2e.CRBStyleCharacterActorSheetPF2E'];
+    const characterSheet = CONFIG.Actor.sheetClasses['character']['ActorSheet5e'];
     characterSheet.cls = class CRBStyleCharacterActorSheetPF2E extends characterSheet.cls {
         async _onDrop(event: DragEvent) {
             // @ts-ignore
